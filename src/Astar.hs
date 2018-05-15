@@ -43,7 +43,7 @@ unwindSearch pf (SearchNode prev i dir _) =
   case prev of
     Nothing -> [i]
     Just sn -> i : unwindSearch pf sn
-                                                          
+
 -- The normal A* heuristic. Uses infinity norm, since we can move in all 8 directions on our grid
 normalHeuristic :: HeuristicFn
 normalHeuristic node (Pathfinding grid visited open start finish) = let
@@ -69,7 +69,7 @@ normalExpand pf sn =
       s | s <- sns,
       let
         a   = index s
-        val = normalHeuristic s pf 
+        val = normalHeuristic s pf
       in
         betterThanOpen o val a && betterThanVisited v val a
         ]
@@ -120,4 +120,4 @@ astar expand heuristic pf sn =
             astar expand heuristic pf'' searchnode
         Nothing                 -> (Nothing, pf')
 
-  
+
