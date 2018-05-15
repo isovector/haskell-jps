@@ -257,6 +257,15 @@ markGrid pf path =
     pathMarked = U.imap (markSquare pathmap 5) visitedMarked
   in Grid ds pathMarked
 
+
+newGrid :: Int -> Int -> (Int -> Int -> Word8) -> Grid
+newGrid w h f =
+  Grid (GridDims w h) $ U.fromList $ do
+    y <- [0 .. h-1]
+    x <- [0 .. w-1]
+    pure $ f x y
+
+
 -- Marks squares with the marker value. If any of the squares are Blocked, will throw
 -- and error as a sanity check
 markSquares :: Map.Map Int Int -> U.Vector Square -> Square -> U.Vector Square
