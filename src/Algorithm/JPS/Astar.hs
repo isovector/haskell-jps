@@ -1,6 +1,6 @@
 -- Implements A-star search framework and basic heuristic
 
-module Astar where
+module Algorithm.JPS.Astar where
 
 import qualified Data.Map.Strict as Map
 import Data.Word
@@ -10,7 +10,7 @@ import qualified Data.Set as Set
 import qualified Data.List as L
 import qualified Data.IntPSQ as PSQ
 
-import Grid
+import Algorithm.JPS.Grid
 
 import Debug.Trace
 

@@ -1,26 +1,23 @@
+module Algorithm.JPS where
 
-module JPS where
+import           Algorithm.JPS.Astar
+import           Algorithm.JPS.Grid
 
-import           Astar
-import qualified Data.Map.Strict as Map
-import           Grid
-
-findPathJPS :: Grid -> Int -> Int -> ([Int], Map.Map Int Int)
+findPathJPS :: Grid -> Int -> Int -> [Int]
 findPathJPS g start finish =
   let
     pf            = newPathfinding g start finish
     startnode     = (SearchNode Nothing start C 0)
     (result, pf') = astar expandJPS heuristicJPS pf startnode
-    v             = visited pf'
   in
     case result of
-      Nothing -> ([ ], v)
-      Just sn -> (unwindJPS pf' sn, v)
+      Nothing -> []
+      Just sn -> unwindJPS pf' sn
 
 unwindJPS :: Pathfinding -> SearchNode -> [Int]
 unwindJPS pf (SearchNode prev i dir depth) =
   case prev of
-    Nothing                         -> [i]
+    Nothing -> [i]
     Just sn -> let (SearchNode _ p backdir _) = sn in
       (unwindBetween (dims $ grid pf) (opposite backdir) i p) ++ unwindJPS pf sn
 

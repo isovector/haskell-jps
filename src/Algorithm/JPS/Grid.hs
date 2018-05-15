@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Grid where
+module Algorithm.JPS.Grid where
 
 import qualified Data.IntPSQ as PSQ
 import qualified Data.Map.Strict as Map
@@ -78,54 +78,58 @@ moveInDirection d dir2 i =
     C  -> i
 
 between :: Direction -> Direction -> Direction
-between d1 d2 = case (d1, d2) of
-                  (N, E) -> NE
-                  (E, N) -> NE
-                  (E, S) -> SE
-                  (S, E) -> SE
-                  (S, W) -> SW
-                  (W, S) -> SW
-                  (W, N) -> NW
-                  (N, W) -> NW
-                  _      -> error $ ("Tried to find direction between non-orthogonal directions: "
-                                      ++ show d1 ++ " and " ++ show d2)
+between d1 d2 =
+  case (d1, d2) of
+    (N, E) -> NE
+    (E, N) -> NE
+    (E, S) -> SE
+    (S, E) -> SE
+    (S, W) -> SW
+    (W, S) -> SW
+    (W, N) -> NW
+    (N, W) -> NW
+    _      -> error $ "Tried to find direction between non-orthogonal directions: "
+                        ++ show d1 ++ " and " ++ show d2
 
 nineties :: Direction -> (Direction, Direction)
-nineties d = case d of
-               N  -> (W, E)
-               NE -> (NW, SE)
-               E  -> (N, S)
-               SE -> (NE, SW)
-               S  -> (E, W)
-               SW -> (SE, NW)
-               W  -> (S, N)
-               NW -> (SW, NE)
-               C  -> error $ "nineties relative center is undefined"
+nineties d =
+  case d of
+    N  -> (W, E)
+    NE -> (NW, SE)
+    E  -> (N, S)
+    SE -> (NE, SW)
+    S  -> (E, W)
+    SW -> (SE, NW)
+    W  -> (S, N)
+    NW -> (SW, NE)
+    C  -> error $ "nineties relative center is undefined"
 
 
 fortyfives :: Direction -> (Direction, Direction)
-fortyfives d = case d of
-                 N  -> (NE, NW)
-                 NE -> (N, E)
-                 E  -> (NE, SE)
-                 SE -> (E, S)
-                 S  -> (SE, SW)
-                 SW -> (S, W)
-                 W  -> (SW, NW)
-                 NW -> (W, N)
-                 C  -> error $ "fortyfives relative center is undefined"
+fortyfives d =
+  case d of
+    N  -> (NE, NW)
+    NE -> (N, E)
+    E  -> (NE, SE)
+    SE -> (E, S)
+    S  -> (SE, SW)
+    SW -> (S, W)
+    W  -> (SW, NW)
+    NW -> (W, N)
+    C  -> error $ "fortyfives relative center is undefined"
 
 opposite :: Direction -> Direction
-opposite d = case d of
-               N  -> S
-               NE -> SW
-               E  -> W
-               SE -> NW
-               S  -> N
-               SW -> NE
-               W  -> E
-               NW -> SE
-               C  -> C
+opposite d =
+  case d of
+    N  -> S
+    NE -> SW
+    E  -> W
+    SE -> NW
+    S  -> N
+    SW -> NE
+    W  -> E
+    NW -> SE
+    C  -> C
 
 chebyshev :: Coord -> Coord -> Int
 chebyshev (Coord x1 y1) (Coord x2 y2) = let

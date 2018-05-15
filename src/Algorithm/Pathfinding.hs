@@ -29,11 +29,11 @@ import qualified Astar as Astar
 
 
 main::IO ()
-main = 
+main =
   do
 
     -- TODO : make an actual command-line interface instead of hardcoding :)
-    
+
   -- [input, output] <- getArgs
     {-
   input  <- return "../maps/AR0011SRBW.jpg"
@@ -50,20 +50,20 @@ main =
   input  <- return "../maps/CalderaBW.jpg"
   finish <- return (Coord 140 511)
   start  <- return (Coord 572 56)
-{-    
+{-
 -}
 
-  
+
   output <- return "./testout.png"
-  
+
   --finish <- return (Coord 420 393)
   pathfindImage input output start finish
-  
+
 -- Do a pathfinding operation on the image at pathIn; save the
 -- resulting image to pathOut.
 pathfindImage :: FilePath -> FilePath -> Coord -> Coord -> IO ()
 pathfindImage pathIn pathOut startc finishc = do
-  
+
   io <- load Autodetect pathIn
 
   case io of
@@ -72,13 +72,13 @@ pathfindImage pathIn pathOut startc finishc = do
       print err
 
     Right (rgb :: Image.RGB) -> do
-      
+
       let
         grid   = imageToGrid rgb
         dim    = dims grid
         start  = c2i dim startc
         finish = c2i dim finishc
-        
+
       {-
       defaultMain [
         bench "searchAstar" $ whnf (\x -> Astar.findPathNormal x start finish) grid
@@ -90,37 +90,37 @@ pathfindImage pathIn pathOut startc finishc = do
       defaultMain [
         bench "searchJPS" $ whnf (\x -> JPS.findPathJPS x start finish) grid
         ]
-      
+
       (path, visited) <- return (JPS.findPathJPS grid start finish)
       -}
-      
+
       grid' <- return
         $ (markStartFinish start finish)
         $ (markPath path)
         $ (markVisited visited)
         $ grid
-      
+
       case path of
         [] -> do
           putStrLn("No path found!")
         otherwise -> do
           putStrLn("Found a path!")
-          
+
       image <- return (gridToImage grid')
-    
+
       outExists <- doesFileExist pathOut
       when outExists (removeFile pathOut)
-      
+
       mErr <- save Autodetect pathOut image
       case mErr of
         Nothing -> return ()
         Just err -> do
           putStrLn $ "ERROR - could not save image to path: " ++ pathOut
           print err
-  
+
 -- Convert coordinates to / from the Shape format used by Vision (we only need 2d coordinates :) )
 dim2ToCoord (((d0 :. d1) :: DIM1) :. d2) = (Coord d1 d2)
-  
+
 -- Convert a coordinate back to a Shape
 coordToDim2 :: Coord -> DIM2
 coordToDim2 (Coord x y) = ix2 x y
@@ -133,13 +133,13 @@ colorToSquare (Image.RGBPixel r g b) = if (r < 10) && (b < 10) && (g < 10) then 
 squareToColor :: Square -> Image.RGBPixel
 squareToColor sq = case sq of
                      0 -> (Image.RGBPixel 0   0   0)   -- Blocked
-                     1 -> (Image.RGBPixel 255 255 255) -- Open 
+                     1 -> (Image.RGBPixel 255 255 255) -- Open
                      2 -> (Image.RGBPixel 255   0 255)   -- Start
                      3 -> (Image.RGBPixel 0   0   255) -- Finish
                      4 -> (Image.RGBPixel 244 158 66)  -- Visited
                      5 -> (Image.RGBPixel 66 212 244)  -- On Path
-                      
--- Convert an RGB image into a Grid 
+
+-- Convert an RGB image into a Grid
 imageToGrid :: Image.RGB -> Grid
 imageToGrid (Image.Manifest manifestSize manifestVector) =
   let
@@ -151,7 +151,7 @@ imageToGrid (Image.Manifest manifestSize manifestVector) =
     squaresWithCoords = [(dim2ToCoord (fromLinearIndex manifestSize index), sq)
                         | (index, sq) <- squaresWithIndices]
     grid              = Unboxed.fromList squares
-    in Grid dims grid 
+    in Grid dims grid
 
 -- Convert a grid to a corresponding image
 gridToImage :: Grid -> Image.RGB

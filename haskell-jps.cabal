@@ -16,10 +16,12 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable haskell-jps
-  main-is:             Main.hs
+library
   hs-source-dirs:      src/
-  ghc-options: -Werror, -Wall
+  ghc-options: -Wall
+  exposed-modules: Algorithm.JPS
+                 , Algorithm.JPS.Grid
+                 , Algorithm.JPS.Astar
 
   -- other-modules:
   -- other-extensions:
